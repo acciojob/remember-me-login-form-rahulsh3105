@@ -1,39 +1,48 @@
-//your JS code here. If required.
-// Check if there are saved login details in local storage
-let savedUsername = localStorage.getItem("username");
-let savedPassword = localStorage.getItem("password");
+const form = document.querySelector('form');
+const usernameInput = document.getElementById('username');
+const passwordInput = document.getElementById('password');
+const rememberInput = document.getElementById('checkbox');
+const submitButton = document.getElementById('submit');
+const existingButton = document.getElementById('existing');
 
-// If there are saved login details, show the "existing user" button
-if (savedUsername && savedPassword) {
-	let existingButton = document.createElement("button");
-	existingButton.setAttribute("id", "existing");
-	existingButton.textContent = "Login as existing user";
-	document.body.appendChild(existingButton);
+// Check if there are saved details
+if (localStorage.getItem('username') && localStorage.getItem('password')) {
+  existingButton.style.display = 'block';
 }
-
-// When the form is submitted
-document.querySelector("form").addEventListener("submit", function(e) {
-	e.preventDefault(); // Prevent the default form submit
-
-	let username = document.querySelector("#username").value;
-	let password = document.querySelector("#password").value;
-	let remember = document.querySelector("#remember").checked;
-
-	// Save login details to local storage if "remember me" is checked
-	if (remember) {
-		localStorage.setItem("username", username);
-		localStorage.setItem("password", password);
-	} else {
-		localStorage.removeItem("username");
-		localStorage.removeItem("password");
-	}
-
-	alert("Logged in as " + username);
-});
-
-// When the "existing user" button is clicked
-document.querySelector("#existing").addEventListener("click", function() {
-	let savedUsername = localStorage.getItem("username");
-	let savedPassword = localStorage.getItem("password");
-	alert("Logged in as " + savedUsername);
-});
+// Show alert message
+function showAlert(username) {
+  alert(`Logged in as ${username}`);
+}
+// Save details to local storage
+function saveDetails() {
+  localStorage.setItem('username', usernameInput.value);
+  localStorage.setItem('password', passwordInput.value);
+}
+// Remove details from local storage
+function removeDetails() {
+  localStorage.removeItem('username');
+  localStorage.removeItem('password');
+}
+// Check if remember me is checked
+function rememberMe() {
+  if (rememberInput.checked) {
+    saveDetails();
+  } else {
+    removeDetails();
+  }
+}
+// Submit form
+function submitForm(event) {
+  event.preventDefault();
+  const username = usernameInput.value;
+  showAlert(username);
+  rememberMe();
+}
+// Login as existing user
+function loginExisting() {
+  const username = localStorage.getItem('username');
+  showAlert(username);
+}
+// Event listeners
+submitButton.addEventListener('click', submitForm);
+existingButton.addEventListener('click', loginExisting);
